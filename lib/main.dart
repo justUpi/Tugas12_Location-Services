@@ -13,9 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Tugas 12 Location Services',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData(primarySwatch: Colors.blue),
       home: const LocationTaskScreen(),
     );
   }
@@ -38,7 +36,7 @@ class _LocationTaskScreenState extends State<LocationTaskScreen> {
 
   Future<void> jalankanTugasNavigasi() async {
     print('=== TUGAS 12 - Location Services ===');
-    
+
     // Handle izin lokasi terlebih dahulu
     bool serviceEnabled;
     LocationPermission permission;
@@ -57,18 +55,19 @@ class _LocationTaskScreenState extends State<LocationTaskScreen> {
         return;
       }
     }
-    
+
     if (permission == LocationPermission.deniedForever) {
       print('Izin lokasi ditolak secara permanen.');
       return;
     }
 
-    
     // INSTRUKSI 1: Ambil koordinat saat ini menggunakan Geolocator
-    
+
     try {
       Position position = await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(accuracy: LocationAccuracy.high)
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+        ),
       );
       print('👉 [INSTRUKSI 1] Koordinat Perangkat Saat Ini:');
       print('   Latitude : ${position.latitude}');
@@ -79,14 +78,12 @@ class _LocationTaskScreenState extends State<LocationTaskScreen> {
 
     print('--------------------------------------------------');
 
-    
     // INSTRUKSI 2: Cari koordinat dari alamat kampus menggunakan geocoding
-    
+
     try {
-      // Silakan ubah string alamat di bawah ini sesuai nama kampus Anda jika diperlukan
-      String alamatKampus = "Universitas Indonesia, Depok"; 
+      String alamatKampus = "Telkom University, Bandung";
       List<Location> locations = await locationFromAddress(alamatKampus);
-      
+
       if (locations.isNotEmpty) {
         print('👉 [INSTRUKSI 2] Koordinat dari Alamat Kampus ($alamatKampus):');
         print('   Latitude : ${locations.first.latitude}');
@@ -98,20 +95,26 @@ class _LocationTaskScreenState extends State<LocationTaskScreen> {
 
     print('--------------------------------------------------');
 
-    
-    // INSTRUKSI 3: Reverse geocoding koordinat 52.2165157, 6.9437819
-    
+    // INSTRUKSI 3: Reverse geocoding koordinat -6.995526290113208, 110.37749150897992
+
     try {
-      double targetLat = 52.2165157;
-      double targetLng = 6.9437819;
-      
-      List<Placemark> placemarks = await placemarkFromCoordinates(targetLat, targetLng);
-      
+      double targetLat = -6.995526290113208;
+      double targetLng = 110.37749150897992;
+
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        targetLat,
+        targetLng,
+      );
+
       if (placemarks.isNotEmpty) {
         Placemark place = placemarks.first;
-        print('👉 [INSTRUKSI 3] Hasil Konversi Koordinat ($targetLat, $targetLng):');
+        print(
+          '👉 [INSTRUKSI 3] Hasil Konversi Koordinat ($targetLat, $targetLng):',
+        );
         print('   Nama Jalan : ${place.street}');
-        print('   Kota        : ${place.locality ?? place.subAdministrativeArea}');
+        print(
+          '   Kota        : ${place.locality ?? place.subAdministrativeArea}',
+        );
         print('   Negara      : ${place.country}');
       }
     } catch (e) {
@@ -124,9 +127,7 @@ class _LocationTaskScreenState extends State<LocationTaskScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Tugas 12: Geolocator & Geocoding'),
-      ),
+      appBar: AppBar(title: const Text('Tugas 12: Geolocator & Geocoding')),
       body: const Center(
         child: Padding(
           padding: EdgeInsets.all(16.0),
